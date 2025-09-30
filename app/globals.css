@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  body {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply backdrop-blur-xl bg-white/80 border border-white/20;
+  }
+  
+  .button-primary {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-button;
+  }
+  
+  .button-secondary {
+    @apply bg-white/80 text-gray-900 border border-gray-200 hover:bg-white hover:border-gray-300;
+  }
+}
+
+@layer utilities {
+  .text-display-2xl {
+    @apply text-5xl md:text-6xl lg:text-7xl;
+  }
+  
+  .text-display-lg {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+  
+  .shadow-glass {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  .shadow-button {
+    box-shadow: 
+      0 4px 14px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .shadow-card-hover {
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+}
