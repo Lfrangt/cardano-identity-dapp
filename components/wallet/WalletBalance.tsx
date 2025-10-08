@@ -18,7 +18,7 @@ interface WalletBalanceProps {
   address: string
 }
 
-export const WalletBalance: React.FC<WalletBalanceProps> = ({
+const WalletBalanceComponent: React.FC<WalletBalanceProps> = ({
   walletApi,
   walletName,
   networkId,
@@ -28,27 +28,43 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
   const [loading, setLoading] = useState(false)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [rawBalanceHex, setRawBalanceHex] = useState<string>('')
   const isInitialized = useRef(false)
   const isFetching = useRef(false)
 
   // 获取余额
   const fetchBalance = useCallback(async () => {
-    if (!walletApi || isFetching.current) return
+    if (!walletApi || isFetching.current) {
+      console.log('跳过重复请求')
+      return
+    }
 
     isFetching.current = true
-    setLoading(true)
+
+    // 延迟设置 loading 状态，避免快速切换导致 DOM 问题
+    setTimeout(() => {
+      if (isFetching.current) {
+        setLoading(true)
+      }
+    }, 50)
+
     setError(null)
-    
+
     try {
       console.log('开始获取钱包余额...')
       const balanceHex = await walletApi.getBalance()
-      console.log('获取到余额:', balanceHex)
-      
+      console.log('原始余额 (hex):', balanceHex)
+      console.log('余额类型:', typeof balanceHex)
+      console.log('余额长度:', balanceHex?.length)
+
       if (balanceHex) {
+        setRawBalanceHex(balanceHex)
         const parsedBalance = parseWalletBalance(balanceHex)
+        console.log('解析后的余额:', parsedBalance)
+        console.log('ADA 字符串:', parsedBalance.ada)
+        console.log('Lovelace 字符串:', parsedBalance.lovelace)
         setBalance(parsedBalance)
         setLastUpdated(new Date())
-        console.log('解析后的余额:', parsedBalance)
       }
     } catch (error: any) {
       console.error('获取余额失败:', error)
@@ -71,10 +87,11 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
       const timer = setTimeout(() => {
         fetchBalance()
       }, 500) // 增加延迟时间
-      
+
       return () => clearTimeout(timer)
     }
-  }, [walletApi, fetchBalance])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletApi])
 
   // 组件卸载时清理
   useEffect(() => {
@@ -118,19 +135,21 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
           <div className="mb-4">
             <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
               {loading ? (
-                <div className="flex items-center justify-center">
+                <div key="loading" className="flex items-center justify-center">
                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mr-3"></div>
                   查询中...
                 </div>
-              ) : balance && balance.ada !== undefined ? (
-                balance.ada > 1000 ? 
-                  `${(balance.ada / 1000).toFixed(1)}K` : 
-                  balance.ada.toFixed(1)
+              ) : balance && balance.ada ? (
+                <span key="balance">
+                  {balance.adaNumber > 1000 ?
+                    `${(balance.adaNumber / 1000).toFixed(2)}K` :
+                    balance.ada} ADA
+                </span>
               ) : error ? (
-                '查询失败'
+                <span key="error">查询失败 ADA</span>
               ) : (
-                '---'
-              )} ADA
+                <span key="waiting">--- ADA</span>
+              )}
             </h2>
             
             <p className="text-gray-600 text-sm">
@@ -223,12 +242,18 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
             <div className="pt-4 border-t border-gray-200">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-600">精确余额</span>
-                <span className="font-mono text-sm">{balance.ada.toFixed(1)} ADA</span>
+                <span className="font-mono text-sm">{balance.ada} ADA</span>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-2">
                 <span className="text-gray-600">Lovelace</span>
                 <span className="font-mono text-xs text-gray-500">{balance.lovelace}</span>
               </div>
+              {rawBalanceHex && (
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">原始数据 (hex)</span>
+                  <span className="font-mono text-xs text-red-500 break-all">{rawBalanceHex.slice(0, 50)}...</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -264,3 +289,13 @@ export const WalletBalance: React.FC<WalletBalanceProps> = ({
     </div>
   )
 }
+
+// 使用 React.memo 防止不必要的重新渲染
+export const WalletBalance = React.memo(WalletBalanceComponent, (prevProps, nextProps) => {
+  // 只有当这些关键属性改变时才重新渲染
+  return (
+    prevProps.walletName === nextProps.walletName &&
+    prevProps.networkId === nextProps.networkId &&
+    prevProps.address === nextProps.address
+  )
+})
