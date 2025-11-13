@@ -1,0 +1,40 @@
+/**
+ * 测试同步功能
+ * 这个文件用于验证 shared-core 是否能正确同步到 Web 和 Mobile
+ */
+
+export interface SyncTestResult {
+  timestamp: number
+  version: string
+  platform: 'web' | 'mobile'
+  message: string
+}
+
+/**
+ * 测试函数：验证共享代码同步
+ */
+export function testSync(platform: 'web' | 'mobile'): SyncTestResult {
+  return {
+    timestamp: Date.now(),
+    version: '1.0.0',
+    platform,
+    message: `✅ Sync successful! Shared code is working on ${platform}`
+  }
+}
+
+/**
+ * 获取共享包版本信息
+ */
+export function getSharedCoreVersion(): string {
+  return '1.0.0 - 共享核心包正常工作'
+}
+
+/**
+ * 测试异步功能
+ */
+export async function testAsyncSync(platform: 'web' | 'mobile'): Promise<string> {
+  // 模拟异步操作
+  await new Promise(resolve => setTimeout(resolve, 100))
+
+  return `🚀 异步测试成功！Platform: ${platform}, Time: ${new Date().toISOString()}`
+}

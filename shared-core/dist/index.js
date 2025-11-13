@@ -1,0 +1,34 @@
+"use strict";
+/**
+ * Cardano Identity DApp - Shared Core
+ * 共享核心库：Web 和 Mobile 共用
+ */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+// Services
+__exportStar(require("./services/identity-nft"), exports);
+__exportStar(require("./services/ipfs"), exports);
+__exportStar(require("./services/wallet-nft"), exports);
+// export * from './services/lucid-nft' // Lucid 仅用于 Web 端，不在共享包中
+// export * from './services/WalletService' // WalletService 依赖 Lucid，仅用于 Web 端
+__exportStar(require("./services/test-sync"), exports);
+// Utils
+__exportStar(require("./utils/crypto"), exports);
+__exportStar(require("./utils/errorHandler"), exports);
+__exportStar(require("./utils/wallet-balance"), exports);
+__exportStar(require("./utils/platform"), exports);
+// Types
+__exportStar(require("./types/wallet"), exports);

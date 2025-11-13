@@ -1,0 +1,22 @@
+{
+  "name": "@cardano-identity/shared-core",
+  "version": "1.0.0",
+  "description": "Shared core logic for Cardano Identity DApp (Web & Mobile)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "react-native": "dist/index.native.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@emurgo/cardano-serialization-lib-browser": "^15.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  }
+}
