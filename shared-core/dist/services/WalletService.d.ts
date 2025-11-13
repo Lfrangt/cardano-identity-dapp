@@ -1,4 +1,3 @@
-import { Lucid } from 'lucid-cardano';
 import { CardanoWalletAPI, WalletConnection } from '../types/wallet';
 export declare class WalletService {
     private lucid;
@@ -36,7 +35,7 @@ export declare class WalletService {
     /**
      * 获取UTXOs
      */
-    getUtxos(): Promise<import("lucid-cardano").UTxO[]>;
+    getUtxos(): Promise<any>;
     /**
      * 签名交易
      */

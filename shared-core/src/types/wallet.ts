@@ -34,7 +34,8 @@ export interface CardanoWalletAPI {
   apiVersion: string
 }
 
-export interface CardanoWindow extends Window {
+// CardanoWindow type - using type alias instead of interface to avoid conflicts
+export type CardanoWindow = Window & {
   cardano?: {
     [key: string]: CardanoWalletAPI
   }

@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:shared && next build",
+    "build": "next build",
     "build:shared": "cd shared-core && npm run build",
+    "build:all": "npm run build:shared && next build",
     "start": "next start",
     "lint": "next lint",
     "sync": "npm run build:shared && cd mobile && npm install"

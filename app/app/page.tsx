@@ -7,17 +7,7 @@ import Link from 'next/link'
 declare global {
   interface Window {
     cardano?: {
-      [key: string]: {
-        enable(): Promise<any>
-        isEnabled(): Promise<boolean>
-        getNetworkId(): Promise<number>
-        getBalance(): Promise<string>
-        getUsedAddresses(): Promise<string[]>
-        getUnusedAddresses(): Promise<string[]>
-        name: string
-        icon: string
-        apiVersion: string
-      }
+      [key: string]: any
     }
   }
 }

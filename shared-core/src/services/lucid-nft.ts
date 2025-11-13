@@ -3,7 +3,7 @@
  * 使用 Lucid-Cardano
  */
 
-import { Lucid, Blockfrost, C, MintingPolicy, PolicyId, Unit } from 'lucid-cardano'
+import { Lucid, Blockfrost, C, MintingPolicy, PolicyId, Unit } from '@lucid-evolution/lucid'
 import { IdentityMetadata } from './identity-nft'
 
 let lucidInstance: Lucid | null = null

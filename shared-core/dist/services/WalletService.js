@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.walletService = exports.WalletService = void 0;
-const lucid_cardano_1 = require("lucid-cardano");
+const lucid_1 = require("@lucid-evolution/lucid");
 const wallet_1 = require("../types/wallet");
 class WalletService {
     constructor() {
@@ -20,7 +20,7 @@ class WalletService {
         try {
             // 只在需要时初始化 Lucid
             if (typeof window !== 'undefined') {
-                this.lucid = await lucid_cardano_1.Lucid.new(new lucid_cardano_1.Blockfrost('https://cardano-preview.blockfrost.io/api/v0', process.env.NEXT_PUBLIC_BLOCKFROST_API_KEY || 'preview_test_key'), this.network);
+                this.lucid = await lucid_1.Lucid.new(new lucid_1.Blockfrost('https://cardano-preview.blockfrost.io/api/v0', process.env.NEXT_PUBLIC_BLOCKFROST_API_KEY || 'preview_test_key'), this.network);
             }
         }
         catch (error) {

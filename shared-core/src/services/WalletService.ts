@@ -1,4 +1,4 @@
-import { Lucid, Blockfrost, Network } from 'lucid-cardano'
+import { Lucid, Blockfrost, Network } from '@lucid-evolution/lucid'
 import { 
   CardanoWindow, 
   CardanoWalletAPI, 

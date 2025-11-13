@@ -2,7 +2,7 @@
  * 真实的 Cardano NFT 铸造服务
  * 使用 Lucid-Cardano
  */
-import { Lucid, MintingPolicy, PolicyId } from 'lucid-cardano';
+import { MintingPolicy, PolicyId } from '@lucid-evolution/lucid';
 import { IdentityMetadata } from './identity-nft';
 /**
  * 初始化 Lucid 实例

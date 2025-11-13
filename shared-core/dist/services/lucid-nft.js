@@ -9,7 +9,7 @@ exports.createMintingPolicy = createMintingPolicy;
 exports.mintIdentityNFTReal = mintIdentityNFTReal;
 exports.checkNFTExists = checkNFTExists;
 exports.getNFTMetadata = getNFTMetadata;
-const lucid_cardano_1 = require("lucid-cardano");
+const lucid_1 = require("@lucid-evolution/lucid");
 let lucidInstance = null;
 /**
  * 初始化 Lucid 实例
@@ -25,7 +25,7 @@ async function initLucid(walletApi) {
         const blockfrostUrl = network === 'Mainnet'
             ? `https://cardano-mainnet.blockfrost.io/api/v0`
             : `https://cardano-preview.blockfrost.io/api/v0`;
-        const lucid = await lucid_cardano_1.Lucid.new(new lucid_cardano_1.Blockfrost(blockfrostUrl, apiKey), network === 'Mainnet' ? 'Mainnet' : 'Preview');
+        const lucid = await lucid_1.Lucid.new(new lucid_1.Blockfrost(blockfrostUrl, apiKey), network === 'Mainnet' ? 'Mainnet' : 'Preview');
         // 连接钱包
         lucid.selectWallet(walletApi);
         lucidInstance = lucid;
