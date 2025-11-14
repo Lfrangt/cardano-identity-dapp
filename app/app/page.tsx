@@ -65,36 +65,24 @@ export default function AppPage() {
   useEffect(() => {
     setMounted(true)
 
-    // 检查是否是演示模式
-    const urlParams = new URLSearchParams(window.location.search)
-    const isDemoMode = urlParams.get('demo') === 'true'
+    // 清除任何假的连接状态
+    setWalletConnected(false)
+    setConnectedWallet(null)
 
-    if (isDemoMode) {
-      // 演示模式：自动模拟钱包连接
-      console.log('🎬 进入演示模式')
-      setTimeout(() => {
-        activateDemoMode()
-      }, 500)
-    } else {
-      // 正常模式：清除任何假的连接状态
-      setWalletConnected(false)
-      setConnectedWallet(null)
-
-      setTimeout(() => {
-        if (typeof window !== 'undefined' && window.cardano) {
-          const available = WALLETS
-            .filter(wallet => window.cardano![wallet.name])
-            .map(wallet => wallet.name)
-          setAvailableWallets(available)
-          console.log('可用钱包:', available)
-        }
-      }, 100)
-    }
+    setTimeout(() => {
+      if (typeof window !== 'undefined' && window.cardano) {
+        const available = WALLETS
+          .filter(wallet => window.cardano![wallet.name])
+          .map(wallet => wallet.name)
+        setAvailableWallets(available)
+        console.log('可用钱包:', available)
+      }
+    }, 100)
   }, [])
 
-  // 激活演示模式
+  // 激活模拟连接
   const activateDemoMode = () => {
-    console.log('✨ 激活演示模式')
+    console.log('✨ 激活模拟连接')
     
     // 模拟钱包数据
     const demoWallet = {
@@ -108,20 +96,7 @@ export default function AppPage() {
     setConnectedWallet(demoWallet)
     setError(null)
 
-    // 显示演示提示
-    const banner = document.createElement('div')
-    banner.id = 'demo-banner'
-    banner.className = 'fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 py-3 px-6 text-center font-medium shadow-lg'
-    banner.innerHTML = `
-      <div class="flex items-center justify-center space-x-2">
-        <span class="text-xl">🎬</span>
-        <span>演示模式 - 所有操作都是模拟的，无需真实钱包</span>
-        <button onclick="window.location.href='/app'" class="ml-4 px-3 py-1 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800">
-          退出演示
-        </button>
-      </div>
-    `
-    document.body.appendChild(banner)
+    console.log('🎬 模拟钱包已连接:', demoWallet)
   }
 
   // 连接钱包函数
@@ -340,17 +315,16 @@ export default function AppPage() {
     setUploadProgress(0)
 
     try {
-      // 检查是否是演示模式
-      const urlParams = new URLSearchParams(window.location.search)
-      const isDemoMode = urlParams.get('demo') === 'true'
+      // 检查是否是模拟钱包
+      const isDemoWallet = connectedWallet?.name === 'Demo Wallet'
 
       // 检查是否配置了真实的 API 密钥
       const blockfrostKey = process.env.NEXT_PUBLIC_BLOCKFROST_API_KEY
       const nftStorageKey = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY
       const pinataKey = process.env.NEXT_PUBLIC_PINATA_API_KEY
 
-      // 启用真实模式（但演示模式下强制使用模拟）
-      const isRealMode = !isDemoMode && blockfrostKey && blockfrostKey !== 'preview_test_key'
+      // 启用真实模式（但模拟钱包强制使用模拟）
+      const isRealMode = !isDemoWallet && blockfrostKey && blockfrostKey !== 'preview_test_key'
 
       /*
       const isRealMode = blockfrostKey && blockfrostKey !== 'preview_test_key' &&
@@ -743,6 +717,29 @@ ${explorerUrl}`)
                       </div>
                     )
                   })}
+
+                  {/* 模拟连接按钮 */}
+                  <button
+                    onClick={activateDemoMode}
+                    disabled={connecting}
+                    className="w-full group relative overflow-hidden p-5 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 hover:from-yellow-500/20 hover:to-orange-500/20 backdrop-blur-xl rounded-2xl border border-yellow-400/20 hover:border-yellow-400/40 transition-all duration-300 disabled:opacity-50"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="text-4xl">🎬</div>
+                        <div className="text-left">
+                          <div className="font-bold text-white text-lg">模拟连接</div>
+                          <div className="text-yellow-400 text-sm flex items-center">
+                            <span className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></span>
+                            无需真实钱包，体验完整功能
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-yellow-300 group-hover:text-white transition-colors">
+                        →
+                      </div>
+                    </div>
+                  </button>
                 </div>
 
                 <div className="mt-8 p-4 bg-blue-500/10 border border-blue-400/20 rounded-2xl backdrop-blur-sm">
@@ -750,6 +747,7 @@ ${explorerUrl}`)
                     <span className="text-2xl">💡</span>
                     <p className="text-blue-200 text-sm text-left">
                       需要安装 Cardano 钱包扩展程序才能使用。推荐使用 Eternl 或 Nami 钱包。
+                      或点击"模拟连接"体验完整功能。
                     </p>
                   </div>
                 </div>

@@ -53,12 +53,6 @@ export default function HomePage() {
               Create Your Identity →
             </Link>
 
-            <Link
-              href="/app?demo=true"
-              className="px-8 py-4 bg-white/80 border border-gray-200 text-gray-900 rounded-xl font-medium hover:bg-white hover:border-gray-300 transition-all text-lg hover:shadow-lg inline-block text-center"
-            >
-              🎬 体验演示
-            </Link>
           </div>
 
           {/* Hero Visual */}
