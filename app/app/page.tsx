@@ -31,6 +31,36 @@ const WALLETS = [
     displayName: 'Flint',
     icon: '🔥',
     downloadUrl: 'https://chrome.google.com/webstore/detail/flint-wallet/hnhobjmcibchnmglfbldbfabcgaknlkj'
+  },
+  {
+    name: 'okxwallet',
+    displayName: 'OKX Wallet',
+    icon: '⭕',
+    downloadUrl: 'https://chrome.google.com/webstore/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge'
+  },
+  {
+    name: 'gerowallet',
+    displayName: 'GeroWallet',
+    icon: '⚡',
+    downloadUrl: 'https://chrome.google.com/webstore/detail/gerowallet/bgpipimickeadkjlklgciifhnalhdjhe'
+  },
+  {
+    name: 'typhoncip30',
+    displayName: 'Typhon',
+    icon: '🌊',
+    downloadUrl: 'https://chrome.google.com/webstore/detail/typhon-wallet/kfdniefadaanbjodldohaedphafoffoh'
+  },
+  {
+    name: 'lace',
+    displayName: 'Lace',
+    icon: '🎴',
+    downloadUrl: 'https://chrome.google.com/webstore/detail/lace/gafhhkghbfjjkeiendhlofajokpaflmk'
+  },
+  {
+    name: 'nufi',
+    displayName: 'NuFi',
+    icon: '🔷',
+    downloadUrl: 'https://chrome.google.com/webstore/detail/nufi/gpnihlnnodeiiaakbikldcihojploeca'
   }
 ]
 
