@@ -65,20 +65,64 @@ export default function AppPage() {
   useEffect(() => {
     setMounted(true)
 
-    // 清除任何假的连接状态
-    setWalletConnected(false)
-    setConnectedWallet(null)
+    // 检查是否是演示模式
+    const urlParams = new URLSearchParams(window.location.search)
+    const isDemoMode = urlParams.get('demo') === 'true'
 
-    setTimeout(() => {
-      if (typeof window !== 'undefined' && window.cardano) {
-        const available = WALLETS
-          .filter(wallet => window.cardano![wallet.name])
-          .map(wallet => wallet.name)
-        setAvailableWallets(available)
-        console.log('可用钱包:', available)
-      }
-    }, 100)
+    if (isDemoMode) {
+      // 演示模式：自动模拟钱包连接
+      console.log('🎬 进入演示模式')
+      setTimeout(() => {
+        activateDemoMode()
+      }, 500)
+    } else {
+      // 正常模式：清除任何假的连接状态
+      setWalletConnected(false)
+      setConnectedWallet(null)
+
+      setTimeout(() => {
+        if (typeof window !== 'undefined' && window.cardano) {
+          const available = WALLETS
+            .filter(wallet => window.cardano![wallet.name])
+            .map(wallet => wallet.name)
+          setAvailableWallets(available)
+          console.log('可用钱包:', available)
+        }
+      }, 100)
+    }
   }, [])
+
+  // 激活演示模式
+  const activateDemoMode = () => {
+    console.log('✨ 激活演示模式')
+    
+    // 模拟钱包数据
+    const demoWallet = {
+      name: 'Demo Wallet',
+      networkId: 0, // Preview 网络
+      balance: 1234.567890,
+      address: 'addr_test1qz2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3jcu5d8ps7zex2k2xt3uqxgjqnnj0kzzmjxtfrkhgyu9lsz9n3k7'
+    }
+
+    setWalletConnected(true)
+    setConnectedWallet(demoWallet)
+    setError(null)
+
+    // 显示演示提示
+    const banner = document.createElement('div')
+    banner.id = 'demo-banner'
+    banner.className = 'fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 py-3 px-6 text-center font-medium shadow-lg'
+    banner.innerHTML = `
+      <div class="flex items-center justify-center space-x-2">
+        <span class="text-xl">🎬</span>
+        <span>演示模式 - 所有操作都是模拟的，无需真实钱包</span>
+        <button onclick="window.location.href='/app'" class="ml-4 px-3 py-1 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-800">
+          退出演示
+        </button>
+      </div>
+    `
+    document.body.appendChild(banner)
+  }
 
   // 连接钱包函数
   const connectWallet = async (walletName: string) => {
@@ -296,13 +340,17 @@ export default function AppPage() {
     setUploadProgress(0)
 
     try {
+      // 检查是否是演示模式
+      const urlParams = new URLSearchParams(window.location.search)
+      const isDemoMode = urlParams.get('demo') === 'true'
+
       // 检查是否配置了真实的 API 密钥
       const blockfrostKey = process.env.NEXT_PUBLIC_BLOCKFROST_API_KEY
       const nftStorageKey = process.env.NEXT_PUBLIC_NFT_STORAGE_API_KEY
       const pinataKey = process.env.NEXT_PUBLIC_PINATA_API_KEY
 
-      // 启用真实模式
-      const isRealMode = blockfrostKey && blockfrostKey !== 'preview_test_key'
+      // 启用真实模式（但演示模式下强制使用模拟）
+      const isRealMode = !isDemoMode && blockfrostKey && blockfrostKey !== 'preview_test_key'
 
       /*
       const isRealMode = blockfrostKey && blockfrostKey !== 'preview_test_key' &&
