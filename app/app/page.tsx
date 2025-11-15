@@ -12,55 +12,35 @@ declare global {
   }
 }
 
-// 支持的钱包列表
+// 支持的主流钱包列表
 const WALLETS = [
   {
     name: 'eternl',
     displayName: 'Eternl',
     icon: '♾️',
-    downloadUrl: 'https://chrome.google.com/webstore/detail/eternl/kmhcihpebfmpgmihbkipmjlmmioameka'
-  },
-  {
-    name: 'nami',
-    displayName: 'Nami',
-    icon: '🏖️',
-    downloadUrl: 'https://chrome.google.com/webstore/detail/nami/lpfcbjknijpeeillifnkikgncikgfhdo'
-  },
-  {
-    name: 'flint',
-    displayName: 'Flint',
-    icon: '🔥',
-    downloadUrl: 'https://chrome.google.com/webstore/detail/flint-wallet/hnhobjmcibchnmglfbldbfabcgaknlkj'
+    downloadUrl: 'https://chrome.google.com/webstore/detail/eternl/kmhcihpebfmpgmihbkipmjlmmioameka',
+    description: '功能最全面的 Cardano 钱包'
   },
   {
     name: 'okxwallet',
     displayName: 'OKX Wallet',
     icon: '⭕',
-    downloadUrl: 'https://chrome.google.com/webstore/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge'
+    downloadUrl: 'https://chrome.google.com/webstore/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge',
+    description: '支持多链的交易所钱包'
   },
   {
-    name: 'gerowallet',
-    displayName: 'GeroWallet',
-    icon: '⚡',
-    downloadUrl: 'https://chrome.google.com/webstore/detail/gerowallet/bgpipimickeadkjlklgciifhnalhdjhe'
-  },
-  {
-    name: 'typhoncip30',
-    displayName: 'Typhon',
-    icon: '🌊',
-    downloadUrl: 'https://chrome.google.com/webstore/detail/typhon-wallet/kfdniefadaanbjodldohaedphafoffoh'
+    name: 'yoroi',
+    displayName: 'Yoroi',
+    icon: '🦋',
+    downloadUrl: 'https://chrome.google.com/webstore/detail/yoroi/ffnbelfdoeiohenkjibnmadjiehjhajb',
+    description: 'EMURGO 官方轻钱包'
   },
   {
     name: 'lace',
     displayName: 'Lace',
     icon: '🎴',
-    downloadUrl: 'https://chrome.google.com/webstore/detail/lace/gafhhkghbfjjkeiendhlofajokpaflmk'
-  },
-  {
-    name: 'nufi',
-    displayName: 'NuFi',
-    icon: '🔷',
-    downloadUrl: 'https://chrome.google.com/webstore/detail/nufi/gpnihlnnodeiiaakbikldcihojploeca'
+    downloadUrl: 'https://chrome.google.com/webstore/detail/lace/gafhhkghbfjjkeiendhlofajokpaflmk',
+    description: 'IOG 官方轻钱包 (支持 Ledger)'
   }
 ]
 
@@ -772,13 +752,33 @@ ${explorerUrl}`)
                   </button>
                 </div>
 
-                <div className="mt-8 p-4 bg-blue-500/10 border border-blue-400/20 rounded-2xl backdrop-blur-sm">
-                  <div className="flex items-start space-x-3">
-                    <span className="text-2xl">💡</span>
-                    <p className="text-blue-200 text-sm text-left">
-                      需要安装 Cardano 钱包扩展程序才能使用。推荐使用 Eternl 或 Nami 钱包。
-                      或点击"模拟连接"体验完整功能。
-                    </p>
+                <div className="mt-8 space-y-3">
+                  <div className="p-4 bg-blue-500/10 border border-blue-400/20 rounded-2xl backdrop-blur-sm">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-2xl">💡</span>
+                      <div className="text-left">
+                        <p className="text-blue-200 text-sm font-medium mb-1">
+                          快速开始
+                        </p>
+                        <p className="text-blue-300/70 text-xs">
+                          推荐使用 Eternl、OKX 或 Yoroi 钱包。也可以点击"模拟连接"体验完整功能。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-purple-500/10 border border-purple-400/20 rounded-2xl backdrop-blur-sm">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-2xl">🔐</span>
+                      <div className="text-left">
+                        <p className="text-purple-200 text-sm font-medium mb-1">
+                          Ledger 硬件钱包用户
+                        </p>
+                        <p className="text-purple-300/70 text-xs">
+                          请先在 Eternl 或 Lace 钱包中连接您的 Ledger 设备，然后选择该钱包连接到 DApp。
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
