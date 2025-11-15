@@ -42,6 +42,17 @@ git push origin main
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Lfrangt/cardano-identity-dapp)
 
+### 📱 移动端钱包连接
+
+体验类似 msx.com 的优雅钱包连接方式：
+
+- 🚀 一键快捷连接
+- 📱 深度链接跳转（iOS/Android）
+- 💻 智能检测已安装钱包
+- ⚡ 自动引导应用下载
+
+详细指南: [MOBILE_WALLET_GUIDE.md](./MOBILE_WALLET_GUIDE.md)
+
 ## ✨ 主要功能
 
 ### 已实现 ✅
@@ -49,6 +60,7 @@ git push origin main
 **核心功能：**
 - **🎨 精美 UI 设计**: 深色主题 + 液态玻璃效果,参考 Apple 设计语言
 - **💳 Cardano 钱包集成**: 支持 Eternl、OKX、Yoroi、Lace 钱包 (CIP-30 标准)
+- **📱 移动端友好连接**: 类似 msx.com 的底部弹窗,支持深度链接跳转
 - **💰 实时余额显示**: 自动转换 Lovelace 到 ADA,支持主网/测试网检测
 
 **身份管理系统：**
