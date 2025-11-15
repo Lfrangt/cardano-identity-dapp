@@ -71,8 +71,8 @@ const CARDANO_WALLETS: Wallet[] = [
     supportsWalletConnect: true
   },
   {
-    id: 'okxwallet',
-    name: 'okxwallet',
+    id: 'okx',
+    name: 'okx',  // OKX 在 window.cardano 中可能使用 'okx' 或 'okxwallet'
     displayName: 'OKX Wallet',
     icon: '⭕',
     color: 'from-gray-800 to-black',
@@ -163,8 +163,8 @@ export const MobileWalletSelector: React.FC<MobileWalletSelectorProps> = ({
         
         // 构建深度链接
         let deepLinkUrl = wallet.deepLink
-        if (wallet.id === 'okxwallet') {
-          // OKX 特殊处理
+        if (wallet.id === 'okx') {
+          // OKX 特殊处理 - 需要传递当前页面 URL
           deepLinkUrl = `${wallet.deepLink}${encodeURIComponent(currentUrl)}`
         }
 

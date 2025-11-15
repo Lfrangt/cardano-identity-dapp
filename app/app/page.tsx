@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { IdentityManager } from '@/components/identity/IdentityManager'
 import { SocialHub } from '@/components/social/SocialHub'
 import { MobileWalletSelector } from '@/components/MobileWalletSelector'
+import { WalletDebugger } from '@/components/WalletDebugger'
 
 // 全局钱包接口类型
 declare global {
@@ -25,7 +26,7 @@ const WALLETS = [
     description: '功能最全面的 Cardano 钱包'
   },
   {
-    name: 'okxwallet',
+    name: 'okx',  // OKX 可能使用 'okx' 或 'okxwallet'
     displayName: 'OKX Wallet',
     icon: '⭕',
     downloadUrl: 'https://chrome.google.com/webstore/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge',
@@ -1608,6 +1609,9 @@ npm run dev
           connectWallet(walletName)
         }}
       />
+
+      {/* 钱包调试器 */}
+      {mounted && <WalletDebugger />}
     </div>
   )
 }
