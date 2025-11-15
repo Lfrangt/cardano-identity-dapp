@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { IdentityManager } from '@/components/identity/IdentityManager'
+import { SocialHub } from '@/components/social/SocialHub'
 
 // 全局钱包接口类型
 declare global {
@@ -51,7 +53,7 @@ export default function AppPage() {
   const [availableWallets, setAvailableWallets] = useState<string[]>([])
   const [connecting, setConnecting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<'home' | 'upload' | 'gallery'>('home')
+  const [activeTab, setActiveTab] = useState<'home' | 'upload' | 'gallery' | 'identity' | 'social'>('home')
 
   // 照片上传相关状态
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -854,10 +856,10 @@ ${explorerUrl}`)
               </div>
 
               {/* 标签导航 */}
-              <div className="flex space-x-2 p-2 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/10">
+              <div className="flex space-x-2 p-2 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/10 overflow-x-auto">
                 <button
                   onClick={() => setActiveTab('home')}
-                  className={`flex-1 px-6 py-3 rounded-xl font-medium transition-all ${
+                  className={`flex-shrink-0 px-6 py-3 rounded-xl font-medium transition-all ${
                     activeTab === 'home'
                       ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-lg'
                       : 'text-purple-300 hover:bg-white/5'
@@ -866,8 +868,28 @@ ${explorerUrl}`)
                   🏠 主页
                 </button>
                 <button
+                  onClick={() => setActiveTab('identity')}
+                  className={`flex-shrink-0 px-6 py-3 rounded-xl font-medium transition-all ${
+                    activeTab === 'identity'
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-lg'
+                      : 'text-purple-300 hover:bg-white/5'
+                  }`}
+                >
+                  👤 身份管理
+                </button>
+                <button
+                  onClick={() => setActiveTab('social')}
+                  className={`flex-shrink-0 px-6 py-3 rounded-xl font-medium transition-all ${
+                    activeTab === 'social'
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-lg'
+                      : 'text-purple-300 hover:bg-white/5'
+                  }`}
+                >
+                  🤝 社交连接
+                </button>
+                <button
                   onClick={() => setActiveTab('upload')}
-                  className={`flex-1 px-6 py-3 rounded-xl font-medium transition-all ${
+                  className={`flex-shrink-0 px-6 py-3 rounded-xl font-medium transition-all ${
                     activeTab === 'upload'
                       ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-lg'
                       : 'text-purple-300 hover:bg-white/5'
@@ -877,7 +899,7 @@ ${explorerUrl}`)
                 </button>
                 <button
                   onClick={() => setActiveTab('gallery')}
-                  className={`flex-1 px-6 py-3 rounded-xl font-medium transition-all ${
+                  className={`flex-shrink-0 px-6 py-3 rounded-xl font-medium transition-all ${
                     activeTab === 'gallery'
                       ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-lg'
                       : 'text-purple-300 hover:bg-white/5'
@@ -900,7 +922,10 @@ ${explorerUrl}`)
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div className="group p-6 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-xl rounded-3xl border border-blue-400/20 hover:border-blue-400/40 transition-all duration-300 cursor-pointer">
+                    <div 
+                      onClick={() => setActiveTab('identity')}
+                      className="group p-6 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-xl rounded-3xl border border-blue-400/20 hover:border-blue-400/40 transition-all duration-300 cursor-pointer"
+                    >
                       <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:shadow-blue-500/50 transition-shadow">
                         <span className="text-white text-3xl">👤</span>
                       </div>
@@ -913,7 +938,10 @@ ${explorerUrl}`)
                       </button>
                     </div>
 
-                    <div className="group p-6 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 backdrop-blur-xl rounded-3xl border border-emerald-400/20 hover:border-emerald-400/40 transition-all duration-300 cursor-pointer">
+                    <div 
+                      onClick={() => setActiveTab('social')}
+                      className="group p-6 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 backdrop-blur-xl rounded-3xl border border-emerald-400/20 hover:border-emerald-400/40 transition-all duration-300 cursor-pointer"
+                    >
                       <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:shadow-emerald-500/50 transition-shadow">
                         <span className="text-white text-3xl">🤝</span>
                       </div>
@@ -953,6 +981,20 @@ ${explorerUrl}`)
                     </div>
                   </div>
                 </div>
+              )}
+
+              {activeTab === 'identity' && connectedWallet && (
+                <IdentityManager 
+                  walletAddress={connectedWallet.address}
+                  onClose={() => setActiveTab('home')}
+                />
+              )}
+
+              {activeTab === 'social' && connectedWallet && (
+                <SocialHub 
+                  currentAddress={connectedWallet.address}
+                  onClose={() => setActiveTab('home')}
+                />
               )}
 
               {activeTab === 'upload' && (
