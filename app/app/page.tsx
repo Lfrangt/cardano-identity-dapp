@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { IdentityManager } from '@/components/identity/IdentityManager'
 import { SocialHub } from '@/components/social/SocialHub'
+import { MobileWalletSelector } from '@/components/MobileWalletSelector'
 
 // 全局钱包接口类型
 declare global {
@@ -54,6 +55,7 @@ export default function AppPage() {
   const [connecting, setConnecting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'home' | 'upload' | 'gallery' | 'identity' | 'social'>('home')
+  const [showMobileWalletSelector, setShowMobileWalletSelector] = useState(false)
 
   // 照片上传相关状态
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -675,6 +677,42 @@ ${explorerUrl}`)
                     </div>
                   </div>
                 )}
+
+                {/* 快捷连接按钮 */}
+                <button
+                  onClick={() => setShowMobileWalletSelector(true)}
+                  className="w-full mb-6 group relative overflow-hidden p-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-xl rounded-3xl border-2 border-blue-400/40 hover:border-blue-400/60 transition-all duration-300 shadow-xl shadow-blue-500/20"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <span className="text-3xl">🚀</span>
+                      </div>
+                      <div className="text-left">
+                        <div className="font-bold text-white text-xl mb-1">快捷连接</div>
+                        <div className="text-blue-300 text-sm flex items-center">
+                          <span className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></span>
+                          选择你喜欢的钱包快速连接
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-blue-300 group-hover:text-white transition-colors text-2xl">
+                      →
+                    </div>
+                  </div>
+                </button>
+
+                {/* 分割线 */}
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/10"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-4 bg-gradient-to-br from-purple-500/20 to-blue-500/20 text-gray-400 rounded-full border border-white/10">
+                      或选择以下钱包
+                    </span>
+                  </div>
+                </div>
 
                 {/* 钱包列表 */}
                 <div className="space-y-3">
@@ -1560,6 +1598,16 @@ npm run dev
           </div>
         </div>
       )}
+
+      {/* 移动端钱包选择器 */}
+      <MobileWalletSelector
+        isOpen={showMobileWalletSelector}
+        onClose={() => setShowMobileWalletSelector(false)}
+        onSelectWallet={(walletName) => {
+          setShowMobileWalletSelector(false)
+          connectWallet(walletName)
+        }}
+      />
     </div>
   )
 }
