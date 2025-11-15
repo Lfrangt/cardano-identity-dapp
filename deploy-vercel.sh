@@ -1,154 +1,109 @@
 #!/bin/bash
 
-echo "╔═══════════════════════════════════════════════════════════╗"
-echo "║   🚀 CardanoID - Vercel 部署脚本                          ║"
-echo "╚═══════════════════════════════════════════════════════════╝"
-echo ""
+# Cardano Identity DApp - Vercel 部署脚本
+# 使用方法: ./deploy-vercel.sh
 
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+echo "🚀 Cardano Identity DApp 部署脚本"
+echo "=================================="
+echo ""
 
 # 检查是否在正确的目录
 if [ ! -f "package.json" ]; then
-    echo "❌ 错误：请在项目根目录运行此脚本"
+    echo "❌ 错误: 请在项目根目录运行此脚本"
     exit 1
 fi
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📦 Step 1: 提交代码到 Git"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-# 显示状态
-echo "📋 当前 Git 状态："
-git status --short
-
-echo ""
-read -p "是否提交这些更改到 Git？(y/n): " commit_changes
-
-if [ "$commit_changes" = "y" ]; then
-    echo ""
-    echo "📝 添加文件..."
-    git add .
-    
-    echo ""
-    read -p "输入提交信息（直接回车使用默认）: " commit_msg
-    
-    if [ -z "$commit_msg" ]; then
-        commit_msg="🚀 部署到 Vercel - $(date '+%Y-%m-%d %H:%M')"
-    fi
-    
-    echo ""
-    echo "💾 提交中..."
-    git commit -m "$commit_msg"
-    
-    echo ""
-    echo "🔄 推送到 GitHub..."
-    git push origin main
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✅ 代码已成功推送到 GitHub${NC}"
-    else
-        echo "❌ 推送失败，请检查 Git 配置"
-        exit 1
-    fi
-else
-    echo "⚠️  跳过 Git 提交"
+# 检查 Node.js
+if ! command -v node &> /dev/null; then
+    echo "❌ 错误: Node.js 未安装"
+    echo "请访问 https://nodejs.org 安装 Node.js"
+    exit 1
 fi
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🔍 Step 2: 检查 Vercel CLI"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ Node.js 版本: $(node -v)"
 echo ""
 
-# 检查 Vercel CLI 是否安装
+# 检查 Git 状态
+echo "📋 检查 Git 状态..."
+if ! git diff-index --quiet HEAD --; then
+    echo "⚠️  警告: 有未提交的更改"
+    echo ""
+    read -p "是否要提交这些更改? (y/n) " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "📝 提交更改..."
+        git add -A
+        read -p "请输入提交信息: " commit_message
+        git commit -m "$commit_message"
+        echo "✅ 更改已提交"
+    fi
+fi
+
+# 推送到 GitHub
+echo ""
+echo "📤 推送到 GitHub..."
+if git push origin main; then
+    echo "✅ 代码已推送到 GitHub"
+else
+    echo "❌ 推送失败，请检查网络连接和 Git 配置"
+    exit 1
+fi
+
+# 检查是否安装了 Vercel CLI
+echo ""
 if ! command -v vercel &> /dev/null; then
     echo "⚠️  Vercel CLI 未安装"
-    read -p "是否现在安装？(y/n): " install_vercel
-    
-    if [ "$install_vercel" = "y" ]; then
-        echo "📥 安装 Vercel CLI..."
+    read -p "是否要安装 Vercel CLI? (y/n) " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "📦 安装 Vercel CLI..."
         npm install -g vercel
     else
-        echo "❌ 需要 Vercel CLI 才能部署"
-        echo "手动安装: npm install -g vercel"
-        exit 1
+        echo ""
+        echo "✅ 代码已推送到 GitHub"
+        echo ""
+        echo "🌐 现在你可以："
+        echo "1. 访问 https://vercel.com"
+        echo "2. 使用 GitHub 账号登录"
+        echo "3. 点击 'New Project'"
+        echo "4. 选择 'cardano-identity-dapp' 仓库"
+        echo "5. 点击 'Deploy'"
+        echo ""
+        echo "📖 详细步骤请查看: DEPLOYMENT_GUIDE.md"
+        exit 0
     fi
-else
-    echo -e "${GREEN}✅ Vercel CLI 已安装${NC}"
 fi
+
+# Vercel 部署
+echo ""
+echo "🚀 开始部署到 Vercel..."
+echo ""
 
 # 检查是否已登录
-echo ""
-echo "🔐 检查 Vercel 登录状态..."
-vercel whoami &> /dev/null
-
-if [ $? -ne 0 ]; then
-    echo "⚠️  未登录 Vercel"
-    echo ""
-    echo "正在打开登录页面..."
+if ! vercel whoami &> /dev/null; then
+    echo "🔐 请登录 Vercel..."
     vercel login
-else
-    VERCEL_USER=$(vercel whoami)
-    echo -e "${GREEN}✅ 已登录: $VERCEL_USER${NC}"
 fi
 
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🚀 Step 3: 部署到 Vercel"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+read -p "部署到生产环境? (y/n) " -n 1 -r
 echo ""
-
-echo "请选择部署类型："
-echo ""
-echo "  1. 🧪 预览部署（Preview）- 用于测试"
-echo "  2. 🚀 生产部署（Production）- 正式上线"
-echo ""
-read -p "选择 (1 或 2): " deploy_type
-
-echo ""
-if [ "$deploy_type" = "1" ]; then
-    echo -e "${BLUE}🧪 开始预览部署...${NC}"
-    vercel
-elif [ "$deploy_type" = "2" ]; then
-    echo -e "${BLUE}🚀 开始生产部署...${NC}"
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "🚀 部署到生产环境..."
     vercel --prod
 else
-    echo "❌ 无效选择"
-    exit 1
+    echo "🔍 创建预览部署..."
+    vercel
 fi
 
-# 检查部署结果
-if [ $? -eq 0 ]; then
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -e "${GREEN}✅ 部署成功！${NC}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "🎉 你的应用已成功部署到 Vercel！"
-    echo ""
-    echo "📝 下一步："
-    echo "  • 访问上面显示的 URL 查看你的应用"
-    echo "  • 在 Vercel 仪表板查看部署详情"
-    echo "  • 配置自定义域名（可选）"
-    echo "  • 设置环境变量（如果需要）"
-    echo ""
-    echo "🔗 Vercel 仪表板: https://vercel.com/dashboard"
-    echo ""
-else
-    echo ""
-    echo "❌ 部署失败"
-    echo ""
-    echo "常见问题："
-    echo "  • 检查网络连接"
-    echo "  • 确保 Git 仓库已推送"
-    echo "  • 查看 Vercel 日志"
-    echo ""
-    exit 1
-fi
-
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
+echo ""
+echo "=================================="
+echo "✨ 部署完成！"
+echo ""
+echo "📝 下一步："
+echo "1. 访问 Vercel 提供的 URL"
+echo "2. 测试所有功能"
+echo "3. 配置自定义域名（可选）"
+echo ""
+echo "📖 更多信息请查看: DEPLOYMENT_GUIDE.md"
+echo "=================================="
